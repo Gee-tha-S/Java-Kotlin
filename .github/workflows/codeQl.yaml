@@ -1,0 +1,37 @@
+name: "CodeQL Analysis"
+ 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 14 * * 1'  # Run weekly on Monday
+ 
+jobs:
+  codeql-analysis:
+    name: Perform CodeQL Analysis
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+ 
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+ 
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: 'java-kotlin'  # Specify appropriate languages
+ 
+    - name: Run CodeQL analysis
+      uses: github/codeql-action/analyze@v2
+ 
+    - name: Upload SARIF file
+      uses: actions/upload-artifact@v3
+      with:
+        name: codeql-results
+        path: ./**/*.sarif
